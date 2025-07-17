@@ -9,7 +9,7 @@ const UIElements = {
 };
 
 const testConfig = {
-    fileSize: 200 * 1024 * 1024, // 200 MB
+    fileSize: 600 * 1024 * 1024, // 200 MB
     maxSpeedForGauge: 1000, // Max speed in Mbps for the gauge
 };
 
@@ -17,7 +17,9 @@ const testConfig = {
 UIElements.startBtn.style.display = 'none';
 
 function updateGauge(speed) {
+    // Using a linear scale for a more direct feel
     const percentage = (speed / testConfig.maxSpeedForGauge) * 100;
+    
     UIElements.gaugeProgress.style.setProperty('--progress-percent', `${Math.min(percentage, 100)}%`);
     UIElements.speedDisplay.querySelector('.speed-value').textContent = speed.toFixed(2);
 }
@@ -26,7 +28,7 @@ function showUIState(state) {
     if (state === 'testing') {
         UIElements.startBtn.style.display = 'none';
         UIElements.speedDisplay.style.display = 'block';
-    } else {
+    } else { // 'finished' or 'idle'
         UIElements.startBtn.style.display = 'block';
         UIElements.speedDisplay.style.display = 'none';
     }
@@ -49,8 +51,9 @@ UIElements.startBtn.addEventListener('click', async () => {
     showUIState('finished');
 });
 
-// Automatically trigger test on load
+// Immediately trigger the first test on page load
 document.addEventListener('DOMContentLoaded', () => UIElements.startBtn.click());
+
 
 // --- Test Functions ---
 
@@ -78,27 +81,22 @@ async function runDownloadTest() {
             const speed = (receivedLength * 8) / ((performance.now() - startTime) / 1000) / 1_000_000;
             updateGauge(speed);
         }
-        // ✅ Corrected: Use actual received length instead of fixed config
-        return (receivedLength * 8) / ((performance.now() - startTime) / 1000) / 1_000_000;
-    } catch (e) {
-        return 0;
-    }
+        return (testConfig.fileSize * 8) / ((performance.now() - startTime) / 1000) / 1_000_000;
+    } catch (e) { return 0; }
 }
 
 function runUploadTest() {
     return new Promise(resolve => {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', `/upload?t=${new Date().getTime()}`, true);
-        const startTime = performance.now();
+        let startTime = performance.now();
         xhr.upload.onprogress = e => {
             if (e.lengthComputable) {
                 const speed = (e.loaded * 8) / ((performance.now() - startTime) / 1000) / 1_000_000;
                 updateGauge(speed);
             }
         };
-        xhr.onload = () => {
-            resolve((testConfig.fileSize * 8) / ((performance.now() - startTime) / 1000) / 1_000_000);
-        };
+        xhr.onload = () => resolve((testConfig.fileSize * 8) / ((performance.now() - startTime) / 1000) / 1_000_000);
         xhr.onerror = () => resolve(0);
         xhr.send(new Blob([new ArrayBuffer(testConfig.fileSize)], { type: 'application/octet-stream' }));
     });
