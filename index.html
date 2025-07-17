@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Speed Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="speedtest-container">
+        <header class="speedtest-header">
+            <h2>Internet speed test</h2>
+            <div class="logo">SPEEDTEST™</div>
+        </header>
+
+        <div class="gauge-area">
+            <div class="gauge">
+                <div class="gauge-bg"></div>
+                <div class="gauge-progress"></div>
+                
+                <div class="gauge-center" id="gaugeCenter">
+                    <div class="speed-display" id="speedDisplay">
+                        <span class="speed-value">0.00</span>
+                        <span class="speed-unit">Mbps</span>
+                    </div>
+                    <button class="rerun-button" id="startBtn">Rerun</button>
+                </div>
+
+                <div class="gauge-scale">
+                    <span class="tick" style="--angle: -120deg;">0</span>
+                    <span class="tick" style="--angle: -95deg;">1</span>
+                    <span class="tick" style="--angle: -70deg;">5</span>
+                    <span class="tick" style="--angle: -45deg;">10</span>
+                    <span class="tick" style="--angle: 0deg;">50</span>
+                    <span class="tick" style="--angle: 45deg;">100</span>
+                    <span class="tick" style="--angle: 90deg;">500</span>
+                    <span class="tick" style="--angle: 120deg;">1,000</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-area">
+            <div class="result-item">
+                <div class="result-label">Ping</div>
+                <div class="result-value"><span id="pingResult">-</span> ms</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Download</div>
+                <div class="result-value"><span id="downloadResult">-</span> Mb/s</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Upload</div>
+                <div class="result-value"><span id="uploadResult">-</span> Mb/s</div>
+            </div>
+        </div>
+    </div>
+    <script src="speedtest.js"></script>
+</body>
+</html>

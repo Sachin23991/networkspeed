@@ -1,0 +1,157 @@
+:root {
+    --progress-percent: 0%;
+    --bg-color: #ffffff;
+    --widget-bg: #fff8f8;
+    --track-color: #f0f0f0;
+    --progress-color: #e90034;
+    --text-color: #4a4a4a;
+    --value-color: #1b1b1b;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.speedtest-container {
+    width: 600px;
+    background-color: var(--widget-bg);
+    border-radius: 15px;
+    padding: 20px 30px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+}
+
+.speedtest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.speedtest-header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.speedtest-header .logo {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.gauge-area {
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.gauge {
+    width: 400px;
+    height: 200px;
+    position: relative;
+}
+
+.gauge-bg, .gauge-progress {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
+}
+
+.gauge-bg {
+    background-color: var(--track-color);
+}
+
+.gauge-progress {
+    background: conic-gradient(from 180deg, var(--progress-color) var(--progress-percent), var(--track-color) 0);
+    transition: --progress-percent 0.2s linear;
+}
+
+.gauge-center {
+    width: 140px;
+    height: 140px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+}
+
+.speed-display .speed-value {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--value-color);
+    line-height: 1;
+}
+
+.speed-display .speed-unit {
+    font-size: 1rem;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.rerun-button {
+    width: 100px;
+    height: 50px;
+    background-color: var(--progress-color);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.rerun-button:hover {
+    filter: brightness(1.1);
+}
+
+.gauge-scale .tick {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    transform: rotate(var(--angle)) translate(220px) rotate(calc(-1 * var(--angle)));
+    font-size: 0.9rem;
+}
+
+.results-area {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+    border-top: 1px solid #f0f0f0;
+}
+
+.result-item {
+    text-align: center;
+    width: 33.3%;
+}
+.result-item + .result-item {
+    border-left: 1px solid #f0f0f0;
+}
+
+.result-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.result-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--value-color);
+    margin-top: 5px;
+}
