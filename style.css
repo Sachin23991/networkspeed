@@ -120,15 +120,6 @@ body {
     filter: brightness(1.1);
 }
 
-.gauge-scale .tick {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-origin: 0 0;
-    transform: rotate(var(--angle)) translate(220px) rotate(calc(-1 * var(--angle)));
-    font-size: 0.9rem;
-}
-
 .results-area {
     display: flex;
     justify-content: space-around;
