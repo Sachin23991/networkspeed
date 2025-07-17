@@ -2,23 +2,23 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// The hosting service provides the port. Fallback to 8080 for local development.
-const PORT = process.env.PORT || 8080;
+// Use the port provided by the hosting environment (like Render), or 3030 for local testing
+const PORT = process.env.PORT || 3030;
 
-// Serve all static files (index.html, etc.) from the 'public' folder
+// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ping endpoint remains the same
+// Ping endpoint
 app.get('/ping', (req, res) => {
     res.sendStatus(200);
 });
 
-// Download endpoint now generates data in memory instead of reading a file
+// Download speed test endpoint
 app.get('/test-files/random.dat', (req, res) => {
-    const fileSizeInMB = 10; // Keeping the 10MB size for a ~30Mbps test
+    const fileSizeInMB = 600;
     const totalSize = fileSizeInMB * 1024 * 1024;
-    const chunkSize = 1 * 1024 * 1024; // Stream in 1MB chunks
-    const chunk = Buffer.alloc(chunkSize, '0'); // Create a chunk of data
+    const chunkSize = 1 * 1024 * 1024;
+    const chunk = Buffer.alloc(chunkSize, '0');
 
     res.setHeader('Content-Type', 'application/octet-stream');
     res.setHeader('Content-Length', totalSize);
@@ -29,18 +29,13 @@ app.get('/test-files/random.dat', (req, res) => {
         if (bytesSent < totalSize) {
             if (res.write(chunk)) {
                 bytesSent += chunkSize;
-                // Continue sending immediately if the buffer is not full
                 if (bytesSent < totalSize) {
-                    sendChunk();
+                    process.nextTick(sendChunk);
                 } else {
                     res.end();
                 }
             } else {
-                // If the buffer is full, wait for it to drain
-                res.once('drain', () => {
-                    bytesSent += chunkSize;
-                    sendChunk();
-                });
+                res.once('drain', sendChunk);
             }
         } else {
             res.end();
@@ -49,15 +44,14 @@ app.get('/test-files/random.dat', (req, res) => {
     sendChunk();
 });
 
-// Upload endpoint remains the same
+// Upload speed test endpoint
 app.post('/upload', (req, res) => {
-    // We just consume the data stream and do nothing with it
-    req.on('data', (chunk) => {});
+    req.on('data', () => {});
     req.on('end', () => {
         res.status(200).send('Upload finished');
     });
 });
 
 app.listen(PORT, () => {
-    console.log(`✅ Server listening on port ${PORT}`);
+    console.log(`✅ Server running on port ${PORT}`);
 });
